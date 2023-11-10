@@ -1,41 +1,44 @@
-import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:sos_frontend/widgets/snackbar.widgets.dart';
 
-Future<bool> handleLocationPermission() async {
-  bool serviceEnabled;
-  LocationPermission permission;
+Future<void> handleLocationPermissions() async {
+  bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
 
-  serviceEnabled = await Geolocator.isLocationServiceEnabled();
-
-  if (!serviceEnabled) {
-    // showSnackBar(context, color, text);
-    return false;
+  if (!isLocationEnabled) {
+    return Future.error("error");
   }
 
-  permission = await Geolocator.checkPermission();
+  LocationPermission permission = await Geolocator.checkPermission();
 
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
+  }
 
-    if (permission == LocationPermission.denied) {
-      // showSnackBar(context, color, text);
-      return false;
-    }
-  }
   if (permission == LocationPermission.deniedForever) {
-    // showSnackBar(context, color, text);
-    return false;
+    return Future.error("Then what's the point of the app");
   }
-  return true;
 }
 
-getLiveLocation() async {
-  final hasPermission = await handleLocationPermission();
+Future<Position> getLiveLocation() async {
+  return await Geolocator.getCurrentPosition();
+}
 
-  if (!hasPermission) return;
+Future<void> sendLiveLocation() async {
+  Position liveLocation = await getLiveLocation();
+  Dio dio = Dio();
 
-  Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high);
-  
+  try {
+    final data = {
+      "city": "Takoradi",
+      "name_of_location": "",
+      "longitude": liveLocation.longitude,
+      "lattitude": liveLocation.latitude
+    };
+
+    final res =
+        await dio.post('https://sos-service.onrender.com/location', data: data);
+    print(res);
+  } catch (e) {
+    throw Exception(e);
+  }
 }

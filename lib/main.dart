@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:sos_frontend/screens/dashboard.screens.dart';
 import 'package:sos_frontend/screens/register.screens.dart';
 import 'package:sos_frontend/screens/splash.screens.dart';
 
 void main() async {
-  runApp(MaterialApp(initialRoute: 'register', routes: {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(MaterialApp(initialRoute: 'splash', routes: {
     'splash': (context) => const Splash(),
-    'register': (context) => const Register()
+    'register': (context) => const Register(),
+    'dashboard': (context) => const Dashboard()
   }));
 }

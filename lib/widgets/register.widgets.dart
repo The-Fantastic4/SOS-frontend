@@ -13,15 +13,26 @@ class RegisterFields extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-          prefix: prefixIcon,
-          hintText: hintText,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15))),
-      style: const TextStyle(
-        fontSize: 16,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(15),
+      child: Container(
+        height: 60,
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 18, 0, 0),
+          child: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+                prefixIcon: prefixIcon,
+                hintText: hintText,),
+            style: const TextStyle(
+              fontSize: 16,
+            ),
+          ),
+        ),
       ),
     );
   }
 }
+
+Color? backgroundColor = Color.fromARGB(255, 252, 231, 231);
