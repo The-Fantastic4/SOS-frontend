@@ -24,7 +24,7 @@ class Grid extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(0, 25, 0, 8),
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sos_frontend/widgets/colors.widgets.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -39,7 +40,7 @@ class _SplashState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.red,
+      backgroundColor: primaryColor,
       body: SafeArea(
         child: Center(
           child: Image.asset('assets/splash.png'),

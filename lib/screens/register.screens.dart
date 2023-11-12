@@ -1,9 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_frontend/api_calls/location.api_calls.dart';
 import 'package:sos_frontend/api_calls/register.api_calls.dart';
+import 'package:sos_frontend/widgets/colors.widgets.dart';
 import 'package:sos_frontend/widgets/loader.widgets.dart';
 import 'package:sos_frontend/widgets/register.widgets.dart';
 import 'package:sos_frontend/widgets/snackbar.widgets.dart';
@@ -16,9 +18,9 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController surnameController = TextEditingController();
-  TextEditingController contactController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _surnameController = TextEditingController();
+  final TextEditingController _contactController = TextEditingController();
   bool _isFirstnameFieldEmpty = true;
   bool _isSurnameFieldEmpty = true;
   bool _isContactFieldEmpty = true;
@@ -28,33 +30,25 @@ class _RegisterState extends State<Register> {
     super.initState();
 
     handleLocationPermissions();
-    firstNameController.addListener(_checkTextfieldEmpty);
-    surnameController.addListener(_checkTextfieldEmpty);
-    contactController.addListener(_checkTextfieldEmpty);
+    _firstNameController.addListener(_checkTextfieldEmpty);
+    _surnameController.addListener(_checkTextfieldEmpty);
+    _contactController.addListener(_checkTextfieldEmpty);
   }
 
   void _checkTextfieldEmpty() {
     setState(() {
-      _isFirstnameFieldEmpty = firstNameController.text.isEmpty;
-      _isSurnameFieldEmpty = surnameController.text.isEmpty;
-      _isContactFieldEmpty = contactController.text.isEmpty;
+      _isFirstnameFieldEmpty = _firstNameController.text.isEmpty;
+      _isSurnameFieldEmpty = _surnameController.text.isEmpty;
+      _isContactFieldEmpty = _contactController.text.isEmpty;
     });
   }
 
-  Future<void> saveValuesToSharedPreferences() async {
+  Future<void> _saveValuesToSharedPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('firstName', firstNameController.text);
-    await prefs.setString('surname', surnameController.text);
-    await prefs.setString('contact', contactController.text);
+    await prefs.setString('firstName', _firstNameController.text);
+    await prefs.setString('surname', _surnameController.text);
+    await prefs.setString('contact', _contactController.text);
   }
-
-  // @override
-  // void dispose() {
-  //   firstNameController.dispose();
-  //   surnameController.dispose();
-  //   contactController.dispose();
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +92,7 @@ class _RegisterState extends State<Register> {
                       Icons.account_circle_outlined,
                       color: Colors.black,
                     ),
-                    controller: firstNameController,
+                    controller: _firstNameController,
                   ),
                   const SizedBox(
                     height: 50,
@@ -109,7 +103,7 @@ class _RegisterState extends State<Register> {
                       Icons.account_circle_outlined,
                       color: Colors.black,
                     ),
-                    controller: surnameController,
+                    controller: _surnameController,
                   ),
                   const SizedBox(
                     height: 50,
@@ -120,7 +114,7 @@ class _RegisterState extends State<Register> {
                       Icons.contact_phone_outlined,
                       color: Colors.black,
                     ),
-                    controller: contactController,
+                    controller: _contactController,
                   ),
                   const SizedBox(
                     height: 70,
@@ -129,7 +123,7 @@ class _RegisterState extends State<Register> {
                     borderRadius: BorderRadius.circular(20),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
+                          backgroundColor: primaryColor,
                           minimumSize: const Size(150, 60),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20))),
@@ -137,7 +131,7 @@ class _RegisterState extends State<Register> {
                         if (_isFirstnameFieldEmpty ||
                             _isSurnameFieldEmpty ||
                             _isContactFieldEmpty) {
-                          showSnackBar(context, Colors.red,
+                          showSnackBar(context, primaryColor,
                               "Field cannot be left empty");
                         } else {
                           _onButtonPressed();
@@ -162,16 +156,20 @@ class _RegisterState extends State<Register> {
         barrierDismissible: false,
         builder: (context) => const CustomLoadingAnimation());
 
-    saveValuesToSharedPreferences();
+    _saveValuesToSharedPreferences();
 
-    final res = await register(firstNameController.text, surnameController.text,
-        contactController.text);
+    final res = await register(_firstNameController.text,
+        _surnameController.text, _contactController.text);
 
-    if (res != null) {
+    if (res != DioException && res != null) {
       Navigator.of(context).pop();
-      Navigator.pushNamed(context, 'dashboard', arguments: {
-        "firstname": firstNameController.text,
+      Navigator.pushReplacementNamed(context, 'dashboard', arguments: {
+        "firstname": _firstNameController.text,
       });
+    } else {
+      Navigator.of(context).pop();
+      showSnackBar(
+          context, primaryColor, "Registration failed! Please try again");
     }
   }
 }

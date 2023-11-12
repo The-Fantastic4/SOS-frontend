@@ -1,5 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:sos_frontend/api_calls/location.api_calls.dart';
+import 'package:sos_frontend/widgets/colors.widgets.dart';
 import 'package:sos_frontend/widgets/loader.widgets.dart';
 import 'package:sos_frontend/widgets/snackbar.widgets.dart';
 
@@ -24,20 +27,26 @@ Future<dynamic> alert(BuildContext context) {
                 ),
               ),
               TextButton(
-                onPressed: () {
+                onPressed: () async {
                   showDialog(
                       context: context,
                       barrierDismissible: false,
                       builder: (context) => const CustomLoadingAnimation());
 
-                  sendLiveLocation();
+                  final result = await sendLiveLocation();
 
-                  Navigator.of(context).pop();
+                  if (result == 200) {
+                    Navigator.of(context).pop();
 
-                  Navigator.pop(context, 'Yes');
+                    Navigator.pop(context, 'Yes');
 
-                  showSnackBar(
-                      context, Colors.green, 'Alert sent! Help is coming');
+                    showSnackBar(
+                        context, Colors.green, 'Alert sent! Help is coming');
+                  } else {
+                    Navigator.of(context).pop();
+                    showSnackBar(context, primaryColor,
+                        "Failed to alert, please try again");
+                  }
                 },
                 child: const Text(
                   'Yes',

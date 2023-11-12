@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sos_frontend/widgets/alert.widgets.dart';
+import 'package:sos_frontend/widgets/colors.widgets.dart';
 import 'package:sos_frontend/widgets/dashboard.widgets.dart';
-import 'package:sos_frontend/widgets/register.widgets.dart';
 import 'package:sos_frontend/widgets/snackbar.widgets.dart';
 
 class Dashboard extends StatefulWidget {
@@ -32,7 +32,7 @@ class _DashboardState extends State<Dashboard> {
             padding: const EdgeInsets.fromLTRB(0, 16, 16, 0),
             child: IconButton(
               onPressed: () {
-                showSnackBar(context, Colors.red, featurePrompt);
+                showSnackBar(context, primaryColor, featurePrompt);
               },
               icon: const Icon(
               Icons.notifications_outlined,
@@ -64,7 +64,7 @@ class _DashboardState extends State<Dashboard> {
         child: Column(
           children: [
             const SizedBox(
-              height: 80,
+              height: 40,
             ),
             Row(
               children: [
@@ -88,10 +88,10 @@ class _DashboardState extends State<Dashboard> {
               ],
             ),
             const SizedBox(
-              height: 60,
+              height: 50,
             ),
             SizedBox(
-              height: 500,
+              height: 450,
               child: GridView.count(
                 crossAxisCount: 2,
                 crossAxisSpacing: 18,
@@ -100,25 +100,25 @@ class _DashboardState extends State<Dashboard> {
                   Grid(
                     image: Image.asset('assets/location.png'),
                     text: "Nearest stations",
-                    color: Colors.blue.shade100,
+                    color: locationAndSettingsColor,
                     onPress: () {
-                      showSnackBar(context, Colors.red, featurePrompt);
+                      showSnackBar(context, primaryColor, featurePrompt);
                     },
                   ),
                   Grid(
                     image: Image.asset('assets/emergency.png'),
                     text: 'Emergency life line',
-                    color: Colors.red.shade100,
+                    color: emergencyAndProfileColor,
                     onPress: () {
-                      showSnackBar(context, Colors.red, featurePrompt);
+                      showSnackBar(context, primaryColor, featurePrompt);
                     },
                   ),
                   GestureDetector(
-                    onTap: () => showSnackBar(context, Colors.red, featurePrompt),
+                    onTap: () => showSnackBar(context, primaryColor, featurePrompt),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child: Container(
-                        color: Colors.red.shade100,
+                        color: emergencyAndProfileColor,
                         child: Column(
                           children: [
                             Padding(
@@ -138,9 +138,9 @@ class _DashboardState extends State<Dashboard> {
                   Grid(
                     image: Image.asset('assets/settings.png'),
                     text: 'Settings',
-                    color: Colors.blue.shade100,
+                    color: locationAndSettingsColor,
                     onPress: () {
-                      showSnackBar(context, Colors.red, featurePrompt);
+                      showSnackBar(context, primaryColor, featurePrompt);
                     },
                   ),
                 ],
@@ -152,11 +152,11 @@ class _DashboardState extends State<Dashboard> {
       floatingActionButton: GestureDetector(
         onTap: () => alert(context),
         child: Container(
-            width: 130,
-            height: 130,
+            width: 120,
+            height: 120,
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.red,
+              color: primaryColor,
             ),
             child: Center(child: Image.asset('assets/logo.png'))),
       ),

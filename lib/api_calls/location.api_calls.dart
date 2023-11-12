@@ -23,7 +23,7 @@ Future<Position> getLiveLocation() async {
   return await Geolocator.getCurrentPosition();
 }
 
-Future<void> sendLiveLocation() async {
+sendLiveLocation() async {
   Position liveLocation = await getLiveLocation();
   Dio dio = Dio();
 
@@ -35,10 +35,17 @@ Future<void> sendLiveLocation() async {
       "lattitude": liveLocation.latitude
     };
 
-    final res =
-        await dio.post('https://sos-service.onrender.com/location', data: data);
-    print(res);
-  } catch (e) {
-    throw Exception(e);
+    final res = await dio.post('https://sos-service.onrender.com/location',
+        options: Options(receiveTimeout: const Duration(milliseconds: 20000)),
+        data: data);
+
+    if (res.statusCode == 200) {
+      return res.statusCode;
+    }
+  } on DioError catch (e) {
+    if (e.type == DioErrorType.connectionTimeout ||
+        e.type == DioErrorType.receiveTimeout) {
+      return e;
+    }
   }
 }

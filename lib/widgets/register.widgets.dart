@@ -34,5 +34,3 @@ class RegisterFields extends StatelessWidget {
     );
   }
 }
-
-Color? backgroundColor = Color.fromARGB(255, 252, 231, 231);
